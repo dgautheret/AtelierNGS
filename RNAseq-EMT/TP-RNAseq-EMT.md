@@ -1,8 +1,8 @@
 Human Differentially Expressed Genes during the EMT Process
 -----------------------------------------------------------
 
-1 The EMT dataset
------------------
+1. The EMT dataset
+------------------
 
 The RNA-seq data comes from a study of a cell transformation process called epthithelium-mesenchymal transition (EMT) by Yang et al. (2016). A transformation process called EMT was induced by ectopic expression of Zeb1 in a non small cell lung cancer cell line (H358). The authors obtained RNA-seq data over a time course of 7 days starting from uninduced cells and every day up to 7 days of induction.
 
