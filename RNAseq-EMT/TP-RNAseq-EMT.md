@@ -1,16 +1,6 @@
 Human Differentially Expressed Genes during the EMT Process
 -----------------------------------------------------------
 
-test 1
-======
-
-test 2
-------
-
-### test 3
-
-#### test 4
-
 1 The EMT dataset
 -----------------
 
@@ -26,8 +16,8 @@ Fastq files were obtained here: <http://www.ncbi.nlm.nih.gov/sra?term=SRP066794>
 
 For this lab session, we sampled about 0.5% of the total RNA-seq reads. All retained reads are from a single chromosome (chr18). We mapped all reads against the HG19 human genome using the STAR program, filtered reads mapping to chromosome 18 using the grep command, and filtered out 50% of the remaining reads using Samtools. This represents 0.5% of total reads, thus actual runtimes and space requirement would be up to 200 times higher than in our exercices.
 
-2. Récupération des fastq
--------------------------
+2 Récupération des fastq
+------------------------
 
 Connectez-vous à votre VM. Creez un dossier de travail pour y placer tous les fichiers de ce projet. Placez-vous dans ce dossier.
 
@@ -43,15 +33,15 @@ tar -zxvf TPrnaseq.tar.gz
 
 Pour la suite du TP il est recommandé de réaliser d'abord l'ensemble de la procédure dans un terminal sur un échantillon apparié (reads R1 et R2). Une fois que toute la procédure fonctionne pour un échantillon, l'automatiser pour tous les échantillons avec un script shell.
 
-3. Contôle qualité
-------------------
+3 Contôle qualité
+-----------------
 
 Lancez la commande fastqc pour un fichier R1 et un fichier R2. Visualisez les différents graphiques. Notez-vous une différence de qualité entre R1 et R2?
 
 A l'aide d'une seule ligne de commande, traitez par fastqc l'ensemble des fichiers fastq. (fastqc est capable de prendre une liste de fichiers avec wildcard "\*")
 
-4. Trimming et retrait des adaptateurs
---------------------------------------
+4 Trimming et retrait des adaptateurs
+-------------------------------------
 
 Utilisez trimmomatic pour éliminer les séquences de basse qualité en extrémité des reads. Nous n'avons pas besoin de retirer les adaptateurs avec les banques EMT.
 
@@ -63,8 +53,8 @@ Avec ces paramètres, Trimmomatic retire les bases des extrémités 5' et 3' tan
 
 Relancez fastqc pour vérifier l'amélioration de la qualité et le nombre de reads perdus par la procédure.
 
-5. Mapping
-----------
+5 Mapping
+---------
 
 ### 5.1 Recupération du Génome et Annotation
 
@@ -119,8 +109,8 @@ Vous trouverez dans le fichier log final les informations suivantes:
 
 Retrouvez-vous bien le nombre de reads du fastq initial?
 
-6. Tri et indexation du fichier BAM
------------------------------------
+6 Tri et indexation du fichier BAM
+----------------------------------
 
 Pour être utilisés par IGV et FeatureCounts, les BAM doivent être triés et indexés. Le tri est déjà fait par STAR (option SortedByCoordinate). On utilisera "samtools index" pour produire l'index.
 
@@ -128,8 +118,8 @@ Pour être utilisés par IGV et FeatureCounts, les BAM doivent être triés et i
 samtools index </path/to/bamfile>
 ```
 
-7. Comptage
------------
+7 Comptage
+----------
 
 Pour chaque banque RNA-seq nous voulons compter les reads alignés sur chaque gene.
 
@@ -172,8 +162,8 @@ awk '{print $5 " " $1}' <inputfile> > <outputfile>
 
 C'est ce type de table qui sera utilisé pour identifier les gènes differentiellement exprimes dans la suite du TP, sous R.
 
-8. Script shell
----------------
+8 Script shell
+--------------
 
 Pour boucler sur les echantillons, on pourra stocker les 6 préfixes des fastq dans une liste:
 
@@ -203,8 +193,8 @@ N'incluez pas les instalaltions ni l'indexation du génome pour STAR dans le scr
 
 A ce stade votre pipeline entier doit pouvoir fonctionner en une seule ligne de commande. Vérifiez.
 
-9. Visualisation d'alignement sous IGV
---------------------------------------
+9 Visualisation d'alignement sous IGV
+-------------------------------------
 
 (Necessite l'installation de IGV sur station locale et un accès Internet car IGV télécharge automatiquement les génomes de référence)
 
