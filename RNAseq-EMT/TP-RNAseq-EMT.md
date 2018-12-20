@@ -1,3 +1,9 @@
+TP/Lab session: RNA-seq Pipelines"
+
+Author: Daniel Gautheret - I2BC
+
+20/12/2018
+
 Human Differentially Expressed Genes during the EMT Process
 -----------------------------------------------------------
 
@@ -189,9 +195,9 @@ if [ ! -f index ];then
 fi
 ```
 
-N'incluez pas les instalaltions ni l'indexation du génome pour STAR dans le script.
+N'incluez pas les installations, téléchargements ni l'indexation du génome dans le script.
 
-A ce stade votre pipeline entier doit pouvoir fonctionner en une seule ligne de commande. Vérifiez.
+Votre pipeline entier doit pouvoir fonctionner en une seule ligne de commande. Vérifiez.
 
 9 Visualisation d'alignement sous IGV
 -------------------------------------
