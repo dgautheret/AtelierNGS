@@ -168,7 +168,8 @@ varscan somatic <path/to/normal-pileup-file> <path/to/tumor-pileup-file> <path/t
 
 Check the VCF file is correct. Should contain somatic variants. (grep "SOMATIC").
 
-## Extract somatic mutations
+## 10/ "Casual" VCF Annotation 
+
 Using a combination of grep and the following awk command, extract all somatic mutations from VCF files (SNP and INDEL) and convert to BED format.
 
 
@@ -183,13 +184,13 @@ Using a combination of grep and awk, extract only GTF lines corresponding to gen
 
 
 ```bash
-bedtools intersect -a <path/to/genome-annot.gtf> -b <path/to/bed-file> > <path/to/interset-file> 
+bedtools intersect -a <path/to/genome-annot.gtf> -b <path/to/bed-file> > <path/to/intersect-file> 
 grep '\sgene\s' <path/to/interset-file> | awk '{print " " $1 " " $4 " " $5 " " $16}'
 ```
 
-## 10/ Annotating mutations
+## 11/ "Serious" VCF Annotation 
 
-CNV annotation is often performed with the Annovar software. However installation of all Annovar databases requires a lot of time and resources. As a simple alternative, you may use the Broad institute's Oncotator web site: https://portals.broadinstitute.org/oncotator/
+Complete CNV annotation is often performed with the Annovar software. However installation of all Annovar databases requires a lot of time and resources. As a simple alternative, you may use the Broad institute's Oncotator web site: https://portals.broadinstitute.org/oncotator/
 Oncotator needs tab delimited file produced as follows:
 
 
@@ -197,7 +198,7 @@ Oncotator needs tab delimited file produced as follows:
 awk '{print $1, "\t", $2, "\t", $2, "\t", $4, "\t",$5}' <path/to/vcf-file> > <path/to/output.tsv-file>
 ```
 
-## 11/ Visualizing alignements with IGV
+## 12/ Visualizing alignments with IGV
 
 (Requires installing IGV on your local station. Then IGV needs Internet access to download reference genomes)
 
