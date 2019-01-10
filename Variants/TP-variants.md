@@ -54,7 +54,12 @@ Create an index directory. Using wget, download into this directory the human ch
 http://hgdownload.soe.ucsc.edu/goldenPath/hg19/chromosomes/chr16.fa.gz
 ```
 
-Créez un dossier d'index, copiez le génome dans ce dossier, puis créez l'index BWA avec:
+Then create the BWA index with: 
+
+
+```bash
+bwa index -a bwtsw <index-dir>/chr16.fa.gz
+```
 
 ## 4/ Quality control + trimming 
 
@@ -68,13 +73,6 @@ trimmomatic PE <path/to/R1.gz> <path/to/R2.gz> -baseout <output-name.fastq>  LEA
 With these parameters, Trimmomatic removes bases from 5' et 3' ends as long as their quality is below 20. If the final read is shorter than 50, it is deleted. Four files are created: two R1+R2 files with trimmed reads (suffix 1P,2P) and two R1+R2 files with deleted reads (suffix 1U,2U). Argument -baseout specifies prefix.suffix of created files. Trimmomatic can work with .gz files. 
 
 For the next 3 sections, we recommend to run the procedure for one single sample (R1+R2). When you are sure it works, create a shell script to run automatically the procedure for normal and tumor samples.
-
-
-```bash
-
-bwa index -a bwtsw <index-dir>/chr16.fa.gz
-
-```
 
 ## 5/ Mapping with BWA
 
