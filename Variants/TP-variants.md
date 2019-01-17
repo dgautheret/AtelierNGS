@@ -1,6 +1,6 @@
 ---
 title: 'Lab session: Exome Sequencing Pipeline'
-author: Daniel Gautheret - Universit<c3><a9> Paris-Sud, I2BC & Gustave Roussy Bioinformatics
+author: Daniel Gautheret - Universite Paris-Sud, I2BC & Gustave Roussy Bioinformatics
   Core
 date: "5/1/2019"
 output:
@@ -58,7 +58,7 @@ Then create the BWA index with:
 
 
 ```bash
-bwa index -a bwtsw <index-dir>/chr16.fa.gz
+bwa index -a bwtsw [index-dir]/chr16.fa.gz
 ```
 
 ## 4/ Quality control + trimming 
@@ -67,7 +67,7 @@ Launch fastqc for an R1 & R2 file. Check quality drop at extremities. Use trimmo
 
 
 ```bash
-trimmomatic PE <path/to/R1.gz> <path/to/R2.gz> -baseout <output-name.fastq>  LEADING:20 TRAILING:20 MINLEN:50
+trimmomatic PE [path/to/R1.gz] [path/to/R2.gz] -baseout [output-name.fastq]  LEADING:20 TRAILING:20 MINLEN:50
 ```
 
 With these parameters, Trimmomatic removes bases from 5' et 3' ends as long as their quality is below 20. If the final read is shorter than 50, it is deleted. Four files are created: two R1+R2 files with trimmed reads (suffix 1P,2P) and two R1+R2 files with deleted reads (suffix 1U,2U). Argument -baseout specifies prefix.suffix of created files. Trimmomatic can work with .gz files. 
@@ -81,7 +81,7 @@ Create a directory for BWA output, then launch BWA with the following parameters
 
 ```bash
 
-bwa mem -M -t 2 -A 2 -E 1 <index-dir>/chr16.fa.gz <path/to/R1> <path/to/R2> > </path/to/outputsamfile> 
+bwa mem -M -t 2 -A 2 -E 1 [index-dir]/chr16.fa.gz [path/to/R1] [path/to/R2] > [/path/to/outputsamfile] 
 
 # Options used:
 # -t INT        Number of threads 
@@ -104,16 +104,16 @@ Make sure the SAM file was created. It should be about 10 times bigger than the 
 
 ```bash
 #Sam 2 Bam
-samtools view -b </path/to/samfile> -o </path/to/bamfile> 
+samtools view -b [/path/to/samfile] -o [/path/to/bamfile] 
 
 #Sort Bam
-samtools sort </path/to/bamfile> -o </path/to/sortedbamfile> 
+samtools sort [/path/to/bamfile] -o [/path/to/sortedbamfile] 
 
 #Index bam file
-samtools index </path/to/bamfile>
+samtools index [/path/to/bamfile]
 
 # flagstats
-samtools flagstat </path/to/sorted-indexed-bamfile> > <path-to-flagstat-file>
+samtools flagstat [/path/to/sorted-indexed-bamfile] > [path-to-flagstat-file]
 
 ```
 
@@ -124,7 +124,7 @@ Now use samtools mpileup to convert each bam file to the pileup format. Beware: 
 
 ```bash
 #Convert to Mpileup
-samtools mpileup -B -A -f <index-dir>/chr16.fa  <path/to/bam-file> > <path/to/mpileup-file>
+samtools mpileup -B -A -f [index-dir]/chr16.fa  [path/to/bam-file] > [path/to/mpileup-file]
 
 ```
 
@@ -135,9 +135,9 @@ Now create a shell script to perform the previous analysis on normal and tumor s
 
 ```bash
 for F in normal tumor; do
-  <trimmomatic> bla bla ... $F.fastq.gz ... bla bla
-  <bwa> bla bla
-  <samtools> bla bla
+  trimmomatic [bla bla ...] $F.fastq.gz [... bla bla]
+  bwa [bla bla]
+  samtools [bla bla]
 done
 ```
 
@@ -160,7 +160,7 @@ Now we use varscan to create variant lists from Normal and Tumor Pileup files:
 
 
 ```bash
-varscan somatic <path/to/normal-pileup-file> <path/to/tumor-pileup-file> <path/to/vcf-file> \
+varscan somatic [path/to/normal-pileup-file] [path/to/tumor-pileup-file] [path/to/vcf-file] \
   --variants --p-value 0.001 --min-avg-qual 15 --output-vcf 1
 ```
 
@@ -172,18 +172,20 @@ Using a combination of grep and the following awk command, extract all somatic m
 
 
 ```bash
-grep 'SOMATIC' <path/to/vcf-file> > <path/to/filtered-vcf>
+grep 'SOMATIC' [path/to/vcf-file] > [path/to/filtered-vcf]
 awk '{OFS="\t"; if (!/^#/){print $1,$2-1,$2,$4"/"$5,"+"}}' \
-   <path/to/filtered-vcf> > <path/to/bed-file>
+   [path/to/filtered-vcf] > [path/to/bed-file]
 ```
 
-Using "bedtools intersect" and the Gencode GTF annotation (available in prof/Databases), extract all Gencode annotations for the somatic mutations.
-Using a combination of grep and awk, extract only GTF lines corresponding to gene and the gene names:
+Using "bedtools intersect" and a GTF annotation, extract all gene annotations for the somatic mutations. Then, using a combination of grep and awk, extract GTF lines corresponding to gene and the gene names:
 
 
 ```bash
-bedtools intersect -a <path/to/genome-annot.gtf> -b <path/to/bed-file> > <path/to/intersect-file> 
-grep '\sgene\s' <path/to/interset-file> | awk '{print " " $1 " " $4 " " $5 " " $16}'
+# Download annotation file with wget from this URL and uncompress it:
+ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/GRCh37_mapping/gencode.v24lift37.basic.annotation.gtf.gz
+
+bedtools intersect -a [path/to/genome-annot.gtf] -b [path/to/bed-file] > [path/to/intersect-file] 
+grep '\sgene\s' [path/to/interset-file] | awk '{print " " $1 " " $4 " " $5 " " $16}'
 ```
 
 ## 11/ "Serious" VCF Annotation 
@@ -193,13 +195,23 @@ Oncotator needs tab delimited file produced as follows:
 
 
 ```bash
-awk '{print $1, "\t", $2, "\t", $2, "\t", $4, "\t",$5}' <path/to/vcf-file> > <path/to/output.tsv-file>
+awk '{print $1, "\t", $2, "\t", $2, "\t", $4, "\t",$5}' [path/to/filtered-vcf] > [path/to/output.tsv-file]
 ```
 
 ## 12/ Visualizing alignments with IGV
 
-(Requires installing IGV on your local station. Then IGV needs Internet access to download reference genomes)
+(Requires installing IGV on your local station. Then IGV needs Internet access to download reference genomes. Use human genome version HG19)
 
 Download normal and tumor BAM files (+indexes) on local computer and view with IGV.
-Locate and visualize a few somatic mutations identified by Varscan.
+
+First check overall mappping results. How well exons are captured? Is there a lot of reads outside exons? what is the sequencing depth? Visualize paired reads. 
+
+Locate and visualize a few somatic mutations identified by Varscan. Nice somatic mutations to look at on chr16:
+
+- CREBBP  16  3788646 
+- CHD9    16  53358208  
+- ST3GAL2 16  70432228 
+
+
+
 
